@@ -1,0 +1,75 @@
+<h1 style="text-align:center">Putnik</h1>
+    
+    <div class="container mat-elevation-z8">
+      <mat-form-field class="search">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      <mat-table #table [dataSource]="dataSource" class="mat-cell" matSort>
+        <ng-container matColumnDef="PutnikID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>PutnikID</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.PutnikID}}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="ImePut">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>ImePut</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.ImePut}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="PrezimePut">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>PrezimePut</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.PrezimePut}}</mat-cell>
+        </ng-container>      
+    
+        <ng-container matColumnDef="JMBGPut">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>JMBGPut</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.JMBGPut}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="BrojPasosa">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>BrojPasosa</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.BrojPasosa}}</mat-cell>
+          </ng-container>
+    
+        <ng-container matColumnDef="KontaktPut">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>KontaktPut</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.KontaktPut}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="AdresaPut">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>AdresaPut</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.AdresaPut}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="mailPut">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>mailPut</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.mailPut}}</mat-cell>
+          </ng-container>  
+        <!-- actions -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>
+            <button mat-icon-button color="primary" (click)="openDialog(1,0,'','',0,'','','','')">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-header-cell>
+    
+          <mat-cell *matCellDef="let row; let i=index;">
+            <button mat-icon-button color="primary" (click)="openDialog(2, row.PutnikID, row.ImePut, row.PrezimePut, row.JMBGPut,row.BrojPasosa, row.KontaktPut,row.AdresaPut,row.mailPut)">
+              <mat-icon aria-label="Edit">edit</mat-icon>
+            </button>
+    
+            <button mat-icon-button color="primary" (click)="openDialog(3, row.PutnikID, row.ImePut, row.PrezimePut, row.JMBGPut, row.BrojPasosa,row.KontaktPut,row.AdresaPut,row.mailPut)">
+              <mat-icon aria-label="Delete">delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row style="cursor: pointer" *matRowDef="let row; columns: displayedColumns;" ></mat-row>
+      </mat-table>
+    
+      <mat-paginator [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 20]"
+                   [showFirstLastButtons]="true">
+    </mat-paginator>
+    </div>
+   <!--  <div class="container mat-elevation-z8">
+     (click)="selectRow(row)" [ngClass]="{'selectRow': selektovanPilot != null && selektovanPilot.PilotID == row.PilotID}"
+      <app-igrac *ngIf="selektovanPilot" [selektovanTim]="selektovanPilot"></app-igrac>
+    </div> -->

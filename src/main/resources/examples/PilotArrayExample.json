@@ -1,0 +1,20 @@
+[
+	{
+		"PilotID": 1,
+		"ImeP": "Petar",
+		"PrezimeP": "Petrovic",
+		"JMBGP": 1234567891234,
+		"KontaktP": "123456",
+		"AdresaP": "Tolstojeva",
+		"mail": "petar@gmail.com"
+},
+{
+		"PilotID": 2,
+		"ImeP": "Milan",
+		"PrezimeP": "Milanovic",
+		"JMBGP": 1234567895876,
+		"KontaktP": "123456",
+		"AdresaP": "Tolstojeva",
+		"mail": "milan@gmail.com"
+	}
+]

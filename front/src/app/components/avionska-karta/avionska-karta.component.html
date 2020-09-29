@@ -1,0 +1,70 @@
+<h1 style="text-align:center">Avionska karta</h1>
+<div class="container mat-elevation-z8">
+  <mat-form-field class="search">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <mat-table #table [dataSource]="dataSource" class="mat-cell" matSort>
+    <ng-container matColumnDef="AvionskaKartaID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>AvionskaKartaID</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.AvionskaKartaID}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="CenaKarte">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>CenaKarte</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.CenaKarte}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="DatumKupovine">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>DatumKupovine</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.DatumKupovine | date : "dd.MM.yyyy."}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="CheckIn">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>CheckIn</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.CheckIn}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="BrojSedista">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>BrojSedista</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.BrojSedista}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="LetID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>LetID</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.Let.DatumPolaska | date : "dd.MM.yyyy."}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="KlasaID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>KlasaID</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.Klasya.TipKlase}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="PutnikID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>PutnikID</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.Putnik.ImePut}}</mat-cell>
+    </ng-container>
+
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button color="primary" (click)="openDialog(1,-1,0,'','','','','','')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button color="primary" (click)="openDialog(2, row.AvionskaKartaID, row.CenaKarte, row.DatumKupovine, row.CheckIn, row.BrojSedista, row.LetID, row.KlasaID, row.PutnikID)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="primary" (click)="openDialog(3, row.AvionskaKartaID, row.CenaKarte, row.DatumKupovine, row.CheckIn, row.BrojSedista, row.LetID, row.KlasaID, row.PutnikID)">
+          <mat-icon aria-label="Delete">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row style="cursor: pointer" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+  </mat-paginator>
+</div>
+<!-- <div class="container mat-elevation-z8">
+
+      (click)="selectRow(row)" [ngClass]="{'selectRow': selektovanAvionskaKarta != null && selektovanAvionskaKarta.AvionskaKartaID == row.AvionskaKartaID}"
+      <app-igrac *ngIf="selektovanAvionskaKarta" [selektovanTim]="selektovanAvionskaKarta"></app-igrac>
+    </div> -->

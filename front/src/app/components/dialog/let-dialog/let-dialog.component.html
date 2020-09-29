@@ -1,0 +1,73 @@
+<div class="container">
+  <h3 mat-dialog-title *ngIf="flag == 1">Dodavanje leta</h3>
+  <h3 mat-dialog-title *ngIf="flag == 2">Modifikacija leta: {{data.LetID}}</h3>
+  <h3 mat-dialog-title *ngIf="flag == 3">Brisanje leta: {{data.LetID}}</h3>
+
+  <form class="mat-dialog-content" #formControl="ngForm">
+
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="LetID" [(ngModel)]="data.LetID" name="LetID" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="DatumPolaska" [(ngModel)]="data.DatumPolaska" name="DatumPolaska" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="VremePolaska" [(ngModel)]="data.VremePolaska" name="VremePolaska" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="Status" [(ngModel)]="data.Status" name="Status" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="Terminal" [(ngModel)]="data.Terminal" name="Terminal" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="SlobodnoBizKlasa" [(ngModel)]="data.SlobodnoBizKlasa" name="SlobodnoBizKlasa" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="SlobodnoEkoKlasa" [(ngModel)]="data.SlobodnoEkoKlasa" name="SlobodnoEkoKlasa" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="AvionID" [(ngModel)]="data.AvionID" name="AvionID" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="KompanijaID" [(ngModel)]="data.KompanijaID" name="KompanijaID" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="DestinacijaID" [(ngModel)]="data.DestinacijaID" name="DestinacijaID" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+    <div class="form">
+      <mat-form-field>
+        <input matInput placeholder="PilotID" [(ngModel)]="data.PilotID" name="PilotID" [disabled]="flag == 3" required>
+      </mat-form-field>
+    </div>
+
+
+
+    <div mat-dialog-actions>
+      <button mat-button *ngIf="flag == 1" type="submit" [mat-dialog-close]="1" (click)="add()">Sačuvaj</button>
+      <button mat-button *ngIf="flag == 2" type="submit" [mat-dialog-close]="1" (click)="update()">Sačuvaj</button>
+      <button mat-button *ngIf="flag == 3" type="submit" [mat-dialog-close]="1" (click)="delete()">Obriši</button>
+      <button mat-button (click)="cancel()" tabindex="-1">Poništi</button>
+    </div>
+  </form>
+</div>

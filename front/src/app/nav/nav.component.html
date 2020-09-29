@@ -1,0 +1,36 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false"
+      SideClass="navbar navbar-dark red">
+    <mat-toolbar >Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/pilot" [disabled]='ucitati()'>Pilot</a>
+      <a mat-list-item routerLink="/putnik"[disabled]='ucitati()'>Putnik</a>
+
+      <a mat-list-item routerLink="/aviokompanija"[disabled]='ucitati()'>Avio kompanija</a>
+      <a mat-list-item routerLink="/avion"[disabled]='ucitati()'>Avion</a>
+      <a mat-list-item routerLink="/avionskaKarta"[disabled]='ucitati()'>Avionska Karta</a>
+      <a mat-list-item routerLink="/destinacija"[disabled]='ucitati()'>Destinacija</a>
+      <a mat-list-item routerLink="/klasa"[disabled]='ucitati()'>Klasa</a>
+      <a mat-list-item routerLink="/let"[disabled]='ucitati()'>Let</a>
+
+      
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" style="height:60px!important">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Avion kompanija </span>
+    </mat-toolbar>
+   <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

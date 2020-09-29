@@ -1,0 +1,12 @@
+[
+	{
+		"DestinacijaID":1,
+		"NazivAerodroma":"Nikola Tesla",
+		"Grad":"Beograd"
+},
+{
+		"DestinacijaID":2,
+		"NazivAerodroma":"JFK",
+		"Grad":"New York"
+	}
+]

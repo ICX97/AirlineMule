@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:crc32="http://www.mulesoft.org/schema/mule/crc32" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:oauth2-provider="http://www.mulesoft.org/schema/mule/oauth2-provider" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <file:connector name="File7" autoDelete="true" outputAppend="true" streaming="true" validateConnections="true" doc:name="File"/>
+    <flow name="GetAllPilot">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[Select * from db.Pilot]]></db:dynamic-query>
+        </db:select>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	PilotID: payload01.PilotID,
+	ImeP: payload01.ImeP,
+	PrezimeP: payload01.PrezimeP,
+	JMBGP: payload01.JMBGP,
+	KontaktP: payload01.KontaktP,
+	AdresaP: payload01.AdresaP,
+	mail: payload01.mail
+	})]]></dw:set-payload>
+        </dw:transform-message>
+        <async doc:name="Async">
+            <flow-ref name="PilotLogging" doc:name="Flow Reference"/>
+        </async>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="PilotPost">
+        <async doc:name="Async">
+            <flow-ref name="PilotLogging" doc:name="Flow Reference"/>
+        </async>
+        <json:json-to-object-transformer doc:name="JSON to Object" returnClass="java.util.HashMap"/>
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[INSERT INTO db.Pilot(ImeP,PrezimeP,JMBGP,KontaktP,AdresaP,mail)
+             values (#[payload.ImeP],#[payload.PrezimeP],#[payload.JMBGP],#[payload.KontaktP],#[payload.AdresaP],#[payload.mail])]]></db:parameterized-query>
+        </db:insert>
+        <choice doc:name="Choice">
+            <when expression="#[payload != 1]">
+                <set-property propertyName="http.status" value="400" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Greska pri dodavanju pilota!&quot;}" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <set-property propertyName="http.status" value="201" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Uspesno ste dodali pilota&quot;}" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="PilotGetByID">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[SELECT * from db.Pilot
+			 where PilotID= #[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+        </db:select>
+        <choice doc:name="Choice">
+            <when expression="#[payload.size()!=1]">
+                <set-property propertyName="http.status" value="404" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Pilot not found!&quot;}" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <dw:transform-message doc:name="Transform Message">
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	PilotID: payload01.PilotID,
+	ImeP: payload01.ImeP,
+	PrezimeP: payload01.PrezimeP,
+	JMBGP: payload01.JMBGP,
+	KontaktP: payload01.KontaktP,
+	AdresaP: payload01.AdresaP,
+	mail: payload01.mail
+	})]]></dw:set-payload>
+                </dw:transform-message>
+                <set-property propertyName="http.status" value="200" doc:name="Property"/>
+                <set-payload value="#[payload]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="PilotPutByID">
+        <json:json-to-object-transformer doc:name="JSON to Object" returnClass="java.util.HashMap"/>
+        <db:update config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[UPDATE db.Pilot
+set ImeP= '#[payload.ImeP]',
+PrezimeP= '#[payload.PrezimeP]',
+JMBGP= #[payload.JMBGP],
+KontaktP= '#[payload.KontaktP]',
+AdresaP= '#[payload.AdresaP]',
+mail= '#[payload.mail]'
+where PilotID=#[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+        </db:update>
+        <choice doc:name="Choice">
+            <when expression="#[payload != 1]">
+                <set-property propertyName="http.status" value="400" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Cannot  update pilot&quot;}" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <set-property propertyName="http.status" value="200" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Pilot updated!&quot;}" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="PilotDeleteByID">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[Delete from db.Pilot where PilotID= #[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+        </db:delete>
+        <choice doc:name="Choice">
+            <when expression="#[payload != 1]">
+                <set-property propertyName="http.status" value="400" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Cannot delete the pilot&quot;}" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <set-property propertyName="http.status" value="200" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Pilot deleted!&quot;}" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="PilotLogging">
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <file:outbound-endpoint path="../files" outputPattern="pilotGet.txt" connector-ref="File7" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>

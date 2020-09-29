@@ -1,0 +1,48 @@
+<div class="container">
+    <h3 mat-dialog-title *ngIf="flag == 1">Dodavanje avion</h3>
+    <h3 mat-dialog-title *ngIf="flag == 2">Modifikacija avion: {{data.Marka}}</h3>
+    <h3 mat-dialog-title *ngIf="flag == 3">Brisanje avion: {{data.Marka}}</h3>
+    <form class="mat-dialog-content"  #formControl="ngForm">
+      <div class="form">
+        <mat-form-field>
+          <input matInput placeholder="Marka" [(ngModel)]="data.Marka" name="Marka" 
+          [disabled] = "flag == 3" required>
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field>
+          <input matInput placeholder="Model" [(ngModel)]="data.Model" name="Model" 
+          [disabled] = "flag == 3" required>
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field>
+          <input matInput placeholder="UkupnoBizKlasa" [(ngModel)]="data.UkupnoBizKlasa" name="UkupnoBizKlasa" 
+          [disabled] = "flag == 3" required>
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field>
+          <input matInput placeholder="UkupnoEkoKlasa" [(ngModel)]="data.UkupnoEkoKlasa" name="UkupnoEkoKlasa" 
+          [disabled] = "flag == 3" required>
+        </mat-form-field>
+      </div>
+     
+     <!--  <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="Oznaka" [(ngModel)]="data.oznaka"
+          name="oznaka" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div> -->
+      
+      <div mat-dialog-actions>
+        <button mat-button *ngIf="flag == 1" type="submit" [mat-dialog-close]="1"
+          (click)="add()" >Sačuvaj</button>
+        <button mat-button *ngIf="flag == 2" type="submit" [mat-dialog-close]="1"
+          (click)="update()" >Sačuvaj</button>
+        <button mat-button *ngIf="flag == 3" type="submit" [mat-dialog-close]="1" 
+          (click)="delete()">Obriši</button>
+        <button mat-button (click)="cancel()">Poništi</button>
+      </div>
+    </form>
+  </div>

@@ -1,0 +1,53 @@
+<div class="container">
+    <h3 mat-dialog-title *ngIf="flag == 1">Dodavanje pilota</h3>
+    <h3 mat-dialog-title *ngIf="flag == 2">Modifikacija pilota: {{data.ImeP}}</h3>
+    <h3 mat-dialog-title *ngIf="flag == 3">Brisanje pilot: {{data.ImeP}}</h3>
+    <form class="mat-dialog-content" >
+      <div class="form">
+        <mat-form-field>
+          <input matInput placeholder="ImeP" [(ngModel)]="data.ImeP" name="ImeP" 
+          [disabled] = "flag == 3" required>
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="PrezimeP" [(ngModel)]="data.PrezimeP"
+          name="PrezimeP" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="JMBGP" [(ngModel)]="data.JMBGP"
+          name="JMBGP" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="KontaktP" [(ngModel)]="data.KontaktP"
+          name="KontaktP" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="AdresaP" [(ngModel)]="data.AdresaP"
+          name="AdresaP" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div>
+      <div class="form">
+        <mat-form-field >
+          <input matInput placeholder="mail" [(ngModel)]="data.mail"
+          name="mail" [disabled] = "flag == 3">
+        </mat-form-field>
+      </div>
+      
+      <div mat-dialog-actions>
+        <button mat-button *ngIf="flag == 1" type="submit" [mat-dialog-close]="1"
+          (click)="add()" >Sačuvaj</button>
+        <button mat-button *ngIf="flag == 2" type="submit" [mat-dialog-close]="1"
+          (click)="update()" >Sačuvaj</button>
+        <button mat-button *ngIf="flag == 3" type="submit" [mat-dialog-close]="1" 
+          (click)="delete()">Obriši</button>
+        <button mat-button (click)="cancel()">Poništi</button>
+      </div>
+    </form>
+  </div>

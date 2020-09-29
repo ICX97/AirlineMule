@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:cors="http://www.mulesoft.org/schema/mule/cors" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd">
+    <http:listener-config name="Aerodrom-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="Aerodrom-config" raml="Aerodrom.raml" consoleEnabled="false" doc:name="Router"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="caran123" database="db" doc:name="MySQL Configuration">
+        <db:connection-properties>
+            <db:property key="useUnicode" value="true"/>
+            <db:property key="useJDBCCompliantTimezoneShift" value="true"/>
+            <db:property key="allowPublicKeyRetrieval" value="true"/>
+            <db:property key="serverTimezone" value="UTC"/>
+            <db:property key="useLegacyDatetimeCode" value="false"/>
+            <db:property key="useSSL" value="false"/>
+        </db:connection-properties>
+    </db:mysql-config>
+    <cors:config name="Cors_Configuration" doc:name="Cors Configuration">
+        <cors:origins>
+            <cors:origin url="http://localhost:4200">
+                <cors:methods>
+                    <cors:method>POST</cors:method>
+                    <cors:method>PUT</cors:method>
+                    <cors:method>DELETE</cors:method>
+                    <cors:method>GET</cors:method>
+                </cors:methods>
+            </cors:origin>
+        </cors:origins>
+    </cors:config>
+    <flow name="Aerodrom-main">
+        <http:listener config-ref="Aerodrom-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
+        <apikit:router config-ref="Aerodrom-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="Aerodrom-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="Aerodrom-console">
+        <http:listener config-ref="Aerodrom-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="Aerodrom-config" doc:name="APIkit Console"/>
+    </flow>
+    <flow name="put:/AvioKompanija/{id}:application/json:Aerodrom-config">
+        <flow-ref name="AvioKompanijaPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Pilot/{id}:application/json:Aerodrom-config">
+        <flow-ref name="PilotPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Putnik/{id}:application/json:Aerodrom-config">
+        <flow-ref name="PutnikPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Let/{id}:application/json:Aerodrom-config">
+        <flow-ref name="LetPutByIDFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Destinacija/{id}:application/json:Aerodrom-config">
+        <flow-ref name="DestinacijaPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/AvionskaKarta/{id}:application/json:Aerodrom-config">
+        <flow-ref name="AvionskaKartaPutByIDFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Klasa/{id}:application/json:Aerodrom-config">
+        <flow-ref name="KlasaPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="put:/Avion/{id}:application/json:Aerodrom-config">
+        <flow-ref name="AvionPutByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/AvioKompanija/{id}:Aerodrom-config">
+        <flow-ref name="AvioKompanijaDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/AvionskaKarta/{id}:Aerodrom-config">
+        <flow-ref name="AvionskaKartaDeleteByIdFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Putnik/{id}:Aerodrom-config">
+        <flow-ref name="PutnikDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Pilot/{id}:Aerodrom-config">
+        <flow-ref name="PilotDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Let/{id}:Aerodrom-config">
+        <flow-ref name="LetDeleteByIdFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Destinacija/{id}:Aerodrom-config">
+        <flow-ref name="DestinacijaDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Klasa/{id}:Aerodrom-config">
+        <flow-ref name="KlasaDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="delete:/Avion/{id}:Aerodrom-config">
+        <flow-ref name="AvionDeleteByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvioKompanija:Aerodrom-config">
+        <flow-ref name="GetAllAvioKompanija" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Avion:Aerodrom-config">
+        <flow-ref name="GetAllAvion" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvionskaKarta:Aerodrom-config">
+        <flow-ref name="AvionskaKartaGetAllFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Destinacija:Aerodrom-config">
+        <flow-ref name="GetAllDestinacija" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Klasa:Aerodrom-config">
+        <flow-ref name="GetAllKlasa" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Let:Aerodrom-config">
+        <flow-ref name="LetGetAllFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Pilot:Aerodrom-config">
+        <flow-ref name="GetAllPilot" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Putnik:Aerodrom-config">
+        <flow-ref name="PutnikGetAll" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Let/byAvion/{id}:Aerodrom-config">
+        <flow-ref name="LetGetByAvionFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvionskaKarta/byLet/{id}:Aerodrom-config">
+        <flow-ref name="AvionskaKartaGetByLetFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Let/byPilot/{id}:Aerodrom-config">
+        <flow-ref name="LetGetByPilotFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvionskaKarta/byPutnik/{id}:Aerodrom-config">
+        <flow-ref name="AvionskaKartaGetByPutnikFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Avion/{id}:Aerodrom-config">
+        <flow-ref name="AvionGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Putnik/{id}:Aerodrom-config">
+        <flow-ref name="PutnikGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Klasa/{id}:Aerodrom-config">
+        <flow-ref name="KlasaGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Pilot/{id}:Aerodrom-config">
+        <flow-ref name="PilotGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Let/{id}:Aerodrom-config">
+        <flow-ref name="LetGetByIDFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvionskaKarta/{id}:Aerodrom-config">
+        <flow-ref name="AvionskaKartaGetByIDFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/Destinacija/{id}:Aerodrom-config">
+        <flow-ref name="DestinacijaGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="get:/AvioKompanija/{id}:Aerodrom-config">
+        <flow-ref name="AvioKompanijaGetByID" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/AvioKompanija:application/json:Aerodrom-config">
+        <flow-ref name="AvioKompanijaPost" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Avion:application/json:Aerodrom-config">
+        <flow-ref name="AvionPost" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/AvionskaKarta:application/json:Aerodrom-config">
+        <flow-ref name="AvionskaKartaPostFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Destinacija:application/json:Aerodrom-config">
+        <flow-ref name="DestinacijaPost" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Klasa:application/json:Aerodrom-config">
+        <flow-ref name="KlasaPost" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Let:application/json:Aerodrom-config">
+        <flow-ref name="LetPostFlow" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Pilot:application/json:Aerodrom-config">
+        <flow-ref name="PilotPost" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="post:/Putnik:application/json:Aerodrom-config">
+        <flow-ref name="PutnikPost" doc:name="Flow Reference"/>
+    </flow>
+    <apikit:mapping-exception-strategy name="Aerodrom-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

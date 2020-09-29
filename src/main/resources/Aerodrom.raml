@@ -1,0 +1,458 @@
+#%RAML 1.0
+title: MainApps
+version: v1
+mediaType: application/json
+types:
+  Klasa: !include /datatypes/Klasa.raml
+  Avion: !include /datatypes/Avion.raml
+  Destinacija: !include /datatypes/Destinacija.raml
+  AvioKompanija: !include /datatypes/AvioKompanija.raml
+  Pilot: !include /datatypes/Pilot.raml
+  Let: !include /datatypes/Let.raml
+  Putnik: !include /datatypes/Putnik.raml
+  AvionskaKarta: !include /datatypes/AvionskaKarta.raml
+  Error: !include /datatypes/Error.raml
+/Putnik:
+  get:
+    description: Vraca listu svih putnika u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Putnik[]
+            example: !include /examples/PutnikArrayExample.json
+  /{id}:
+    get:
+      description: Vraca putnika po PutnikID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Putnik
+              example: !include /examples/PutnikExample.json
+    put:
+      description: Modifikuje putnika po PutnikID-u
+      body:
+        application/json:
+          type: Putnik
+          example: !include /examples/PutnikExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Putnik
+              example: !include /examples/PutnikExample.json
+    delete:
+      description: Brise putnika po PutnikID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira novog putnika.
+    body:
+      application/json:
+        type: Putnik
+        example: !include /examples/PutnikExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Putnik
+            example: !include /examples/PutnikExample.json
+/Klasa:
+  get:
+    description: Vraca listu svih klasa u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Klasa[]
+            example: !include /examples/KlasaArrayExample.json
+  /{id}:
+    get:
+      description: Vraca klasu po KlasaID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Klasa
+              example: !include /examples/KlasaExample.json
+    put:
+      description: Modifikuje klasu po KlasaID-u
+      body:
+        application/json:
+          type: Klasa
+          example: !include /examples/KlasaExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Klasa
+              example: !include /examples/KlasaExample.json
+    delete:
+      description: Brise Klasu po KlasaID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira novu klasu.
+    body:
+      application/json:
+        type: Klasa
+        example: !include /examples/KlasaExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Klasa
+            example: !include /examples/KlasaExample.json
+/Avion:
+  get:
+    description: Vraca listu svih aviona u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Avion[]
+            example: !include /examples/AvionArrayExample.json
+  /{id}:
+    get:
+      description: Vraca avione po AvionID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Avion
+              example: !include /examples/AvionExample.json
+    put:
+      description: Modifikuje avione po AvionID-u
+      body:
+        application/json:
+          type: Avion
+          example: !include /examples/AvionExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Avion
+              example: !include /examples/AvionExample.json
+    delete:
+      description: Brise avione po AvionID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira novi avion.
+    body:
+      application/json:
+        type: Avion
+        example: !include /examples/AvionExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Avion
+            example: !include /examples/AvionExample.json
+/Destinacija:
+  get:
+    description: Vraca listu svih destinacija u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Destinacija[]
+            example: !include /examples/DestinacijaArrayExample.json
+  /{id}:
+    get:
+      description: Vraca destinacije po DestinacijaID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Destinacija
+              example: !include /examples/DestinacijaExample.json
+    put:
+      description: Modifikuje destinacije po DestinacijaID-u
+      body:
+        application/json:
+          type: Destinacija
+          example: !include /examples/DestinacijaExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Destinacija
+              example: !include /examples/DestinacijaExample.json
+    delete:
+      description: Brise destinacije po DestinacijaID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira novu destinaciju.
+    body:
+      application/json:
+        type: Destinacija
+        example: !include /examples/DestinacijaExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Destinacija
+            example: !include /examples/DestinacijaExample.json
+/AvioKompanija:
+  get:
+    description: Vraca listu svih aviokompanija u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: AvioKompanija[]
+            example: !include /examples/AvioKompanijaArrayExample.json
+  /{id}:
+    get:
+      description: Vraca aviokompaniju po AvioKompanijaID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvioKompanija
+              example: !include /examples/AvioKompanijaExample.json
+    put:
+      description: Modifikuje aviokompanije po AvioKompanijaID-u
+      body:
+        application/json:
+          type: AvioKompanija
+          example: !include /examples/AvioKompanijaExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvioKompanija
+              example: !include /examples/AvioKompanijaExample.json
+    delete:
+      description: Brise aviokompanije po AvioKompanijaID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira novu aviokompaniju.
+    body:
+      application/json:
+        type: AvioKompanija
+        example: !include /examples/AvioKompanijaExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: AvioKompanija
+            example: !include /examples/AvioKompanijaExample.json
+/Pilot:
+  get:
+    description: Vraca listu svih pilota u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Pilot[]
+            example: !include /examples/PilotArrayExample.json
+  /{id}:
+    get:
+      description: Vraca pilota po PilotID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Pilot
+              example: !include /examples/PilotExample.json
+    put:
+      description: Modifikuje pilot po PilotID-u
+      body:
+        application/json:
+          type: Pilot
+          example: !include /examples/PilotExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Pilot
+              example: !include /examples/PilotExample.json
+    delete:
+      description: Brise pilote po PilotID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira nove pilote.
+    body:
+      application/json:
+        type: Pilot
+        example: !include /examples/PilotExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Pilot
+            example: !include /examples/PilotExample.json
+/Let:
+  get:
+    description: Vraca listu svih letova u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: Let[]
+            example: !include /examples/LetArrayExample.json
+  /byPilot/{id}:
+    get: 
+      description: Vraca let po ID-u pilota.
+      responses:
+        200:
+          body:
+            application/json:
+              type: Let[]
+              example: !include /examples/LetArrayExample.json
+  /byAvion/{id}:
+    get: 
+      description: Vraca let po ID-u aviona.
+      responses:
+        200:
+          body:
+            application/json:
+              type: Let[]
+              example: !include /examples/LetArrayExample.json
+  /{id}:
+    get:
+      description: Vraca letove po LetID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: Let
+              example: !include /examples/LetExample.json
+    put:
+      description: Modifikuje letove po LetID-u
+      body:
+        application/json:
+          type: Let
+          example: !include /examples/LetExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: Let
+              example: !include /examples/LetExample.json
+    delete:
+      description: Brise letove po LetID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira nove letove.
+    body:
+      application/json:
+        type: Let
+        example: !include /examples/LetExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: Let
+            example: !include /examples/LetExample.json
+/AvionskaKarta:
+  get:
+    description: Vraca listu svih avionskih karata u sistemu
+    responses:
+      200:
+        body:
+          application/json:
+            type: AvionskaKarta[]
+            example: !include /examples/AvionskaKartaArrayExample.json
+  /byPutnik/{id}:
+    get: 
+      description: Vraca kartu po ID-u putnika.
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvionskaKarta[]
+              example: !include /examples/AvionskaKartaArrayExample.json
+  /byLet/{id}:
+    get: 
+      description: Vraca kartu po ID-u leta.
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvionskaKarta[]
+              example: !include /examples/AvionskaKartaArrayExample.json
+  /{id}:
+    get:
+      description: Vraca avionsku kartu po AvionskaKartaID-u
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvionskaKarta
+              example: !include /examples/AvionskaKartaExample.json
+    put:
+      description: Modifikuje avionsku kartu po AvionskaKartaID-u
+      body:
+        application/json:
+          type: AvionskaKarta
+          example: !include /examples/AvionskaKartaExample.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: AvionskaKarta
+              example: !include /examples/AvionskaKartaExample.json
+    delete:
+      description: Brise avionske karte po AvionskaKartaID-u
+      responses:
+        204:
+        404:
+          body:
+            application/json:
+              type: Error
+              example: !include /examples/ErrorExample.json
+  post:
+    description: Kreira nove avionske karte.
+    body:
+      application/json:
+        type: AvionskaKarta
+        example: !include /examples/AvionskaKartaExample.json
+    responses:
+      201:
+        body:
+          application/json:
+            type: AvionskaKarta
+            example: !include /examples/AvionskaKartaExample.json

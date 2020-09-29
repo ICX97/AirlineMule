@@ -1,0 +1,22 @@
+[
+	{
+		"PutnikID":1,
+		"ImePut":"Milos",
+		"PrezimePut":"Milosevic",
+		"JMBGPut":1234567897894,
+		"BrojPasosa":"123456",
+		"KontaktPut":"12345678",
+		"AdresaPut":"Puskinova",
+		"mailPut":"milos@gmail.com"
+},
+{
+		"PutnikID":2,
+		"ImePut":"Petar",
+		"PrezimePut":"Petrovic",
+		"JMBGPut":1234567899994,
+		"BrojPasosa":"12345611",
+		"KontaktPut":"123456782",
+		"AdresaPut":"Puskinova",
+		"mailPut":"petar@gmail.com"
+	}
+]

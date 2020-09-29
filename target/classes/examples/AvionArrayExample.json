@@ -1,0 +1,16 @@
+[
+	{
+		"AvionID":1,
+		"Marka":"Boing",
+		"Model":"767",
+		"UkupnoBizKlasa":200,
+		"UkupnoEkoKlasa":200
+},
+{
+		"AvionID":2,
+		"Marka":"Boing",
+		"Model":"575",
+		"UkupnoBizKlasa":200,
+		"UkupnoEkoKlasa":100
+	}
+]

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:crc32="http://www.mulesoft.org/schema/mule/crc32" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:oauth2-provider="http://www.mulesoft.org/schema/mule/oauth2-provider" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <file:connector name="File3" autoDelete="true" outputAppend="true" streaming="true" validateConnections="true" doc:name="File"/>
+	<flow name="AvionskaKartaGetAllFlow">
+		<db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[Select a.AvionskaKartaID,a.CenaKarte,a.DatumKupovine,a.CheckIn,a.BrojSedista,a.LetID,l.DatumPolaska,l.VremePolaska,l.Status,l.Terminal,l.SlobodnoBizKlasa,l.SlobodnoEkoKlasa,l.AvionID,l.KompanijaID,l.DestinacijaID,l.PilotID,a.KlasaID,k.TipKlase,a.PutnikID,p.ImePut,p.PrezimePut,p.JMBGPut,p.BrojPasosa,p.KontaktPut,p.AdresaPut,p.mailPut 
+			from db.AvionskaKarta as a inner join db.Let as l on (a.LetID=l.LetID) inner join db.Klasa as k on (k.klasaID=a.KlasaID) inner join db.Putnik as p on (p.PutnikID=a.PutnikID)]]></db:dynamic-query>
+		</db:select>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	AvionskaKartaID: payload01.AvionskaKartaID,
+	CenaKarte: payload01.CenaKarte,
+	DatumKupovine: payload01.DatumKupovine,
+	CheckIn: payload01.CheckIn,
+	BrojSedista: payload01.BrojSedista,
+	Let: {
+		LetID: payload01.LetID,
+		DatumPolaska: payload01.DatumPolaska,
+		VremePolaska: payload01.VremePolaska,
+		Status: payload01.Status,
+		Terminal: payload01.Terminal,
+		SlobodnoBizKlasa: payload01.SlobodnoBizKlasa,
+		SlobodnoEkoKlasa: payload01.SlobodnoEkoKlasa,
+		AvionID: payload01.AvionID,
+		KompanijaID: payload01.KompanijaID,
+		DestinacijaID: payload01.DestinacijaID,
+		PilotID: payload01.PilotID
+	},
+	Klasa: {
+		KlasaID: payload01.klasaID,
+		TipKlase: payload01.TipKlase
+	},
+	Putnik: {
+		PutnikID: payload01.PutnikID,
+		ImePut: payload01.ImePut,
+		PrezimePut: payload01.PrezimePut,
+		JMBGPut: payload01.JMBGPut,
+		BrojPasosa: payload01.BrojPasosa,
+		KontaktPut: payload01.KontaktPut,
+		AdresaPut: payload01.AdresaPut,
+		mailPut: payload01.mailPut
+	}
+	})]]></dw:set-payload>
+		</dw:transform-message>
+		<async doc:name="Async">
+            <flow-ref name="AvinskaKLogging" doc:name="Flow Reference"/>
+        </async>
+		<set-payload value="#[payload]" doc:name="Set Payload"/>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvionskaKartaPostFlow">
+		<async doc:name="Async">
+            <flow-ref name="AvinskaKLogging" doc:name="Flow Reference"/>
+        </async>
+		<json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+		<db:insert config-ref="MySQL_Configuration" doc:name="Database">
+			<db:parameterized-query><![CDATA[INSERT INTO db.AvionskaKarta
+(CenaKarte,DatumKupovine,CheckIn,BrojSedista,LetID,KlasaID,PutnikID)
+VALUES (#[payload.CenaKarte],#[payload.DatumKupovine],#[payload.CheckIn],#[payload.BrojSedista],#[payload.LetID],#[payload.KlasaID],#[payload.PutnikID])]]></db:parameterized-query>
+		</db:insert>
+		<choice doc:name="Choice">
+			<when expression="#[payload != 1]">
+				<set-property propertyName="http.status" value="400" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Greska pri dodavanju avionske karte!!&quot;}" doc:name="Set Payload"/>
+			</when>
+			<otherwise>
+				<set-property propertyName="http.status" value="201" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Uspesno ste se dodali avionsku kartu!&quot;}" doc:name="Set Payload"/>
+			</otherwise>
+		</choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvionskaKartaGetByPutnikFlow">
+		<db:select config-ref="MySQL_Configuration" doc:name="Database">
+			<db:dynamic-query><![CDATA[select * from db.AvionskaKarta where PutnikID= #[Integer.parseInt(message.inboundProperties.'http.uri.params'.id)]]]></db:dynamic-query>
+		</db:select>
+		<choice doc:name="Choice">
+			<when expression="#[payload.size()==0]">
+				<set-property propertyName="http.status" value="404" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Avionska karta not found!&quot;}" doc:name="Set Payload"/>
+			</when>
+			<otherwise>
+				<set-property propertyName="http.status" value="200" doc:name="Property"/>
+				<set-payload value="#[payload]" doc:name="Set Payload"/>
+			</otherwise>
+		</choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvionskaKartaGetByLetFlow">
+		<db:select config-ref="MySQL_Configuration" doc:name="Database">
+			<db:dynamic-query><![CDATA[select * from db.AvionskaKarta where LetID= #[Integer.parseInt(message.inboundProperties.'http.uri.params'.id)]]]></db:dynamic-query>
+		</db:select>
+		<choice doc:name="Choice">
+			<when expression="#[payload.size()==0]">
+				<set-property propertyName="http.status" value="404" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Avionska karta not found!&quot;}" doc:name="Set Payload"/>
+			</when>
+			<otherwise>
+				<set-property propertyName="http.status" value="200" doc:name="Property"/>
+				<set-payload value="#[payload]" doc:name="Set Payload"/>
+			</otherwise>
+		</choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvionskaKartaGetByIDFlow">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:dynamic-query><![CDATA[Select a.AvionskaKartaID,a.CenaKarte,a.DatumKupovine,a.CheckIn,a.BrojSedista,a.LetID,l.DatumPolaska,l.VremePolaska,l.Status,l.Terminal,l.SlobodnoBizKlasa,l.SlobodnoEkoKlasa,l.AvionID,l.KompanijaID,l.DestinacijaID,l.PilotID,a.KlasaID,k.TipKlase,a.PutnikID,p.ImePut,p.PrezimePut,p.JMBGPut,p.BrojPasosa,p.KontaktPut,p.AdresaPut,p.mailPut 
+			from db.AvionskaKarta as a inner join db.Let as l on (a.LetID=l.LetID) inner join db.Klasa as k on (k.klasaID=a.KlasaID) inner join db.Putnik as p on (p.PutnikID=a.PutnikID)
+             where AvionskaKartaID= #[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+        </db:select>
+        <choice doc:name="Choice">
+            <when expression="#[payload.size()!=1]">
+                <set-property propertyName="http.status" value="404" doc:name="Property"/>
+                <set-payload value="{&quot;message&quot;:&quot;Avionska karta not found!&quot;}" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+            <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload map ((payload01 , indexOfPayload01) -> {
+	AvionskaKartaID: payload01.AvionskaKartaID,
+	CenaKarte: payload01.CenaKarte,
+	DatumKupovine: payload01.DatumKupovine,
+	CheckIn: payload01.CheckIn,
+	BrojSedista: payload01.BrojSedista,
+	Let: {
+		LetID: payload01.LetID,
+		DatumPolaska: payload01.DatumPolaska,
+		VremePolaska: payload01.VremePolaska,
+		Status: payload01.Status,
+		Terminal: payload01.Terminal,
+		SlobodnoBizKlasa: payload01.SlobodnoBizKlasa,
+		SlobodnoEkoKlasa: payload01.SlobodnoEkoKlasa,
+		AvionID: payload01.AvionID,
+		KompanijaID: payload01.KompanijaID,
+		DestinacijaID: payload01.DestinacijaID,
+		PilotID: payload01.PilotID
+	},
+	Klasa: {
+		KlasaID: payload01.KlasaID,
+		TipKlase: payload01.TipKlase
+	},
+	Putnik: {
+		PutnikID: payload01.PutnikID,
+		ImePut: payload01.ImePut,
+		PrezimePut: payload01.PrezimePut,
+		JMBGPut: payload01.JMBGPut,
+		BrojPasosa: payload01.BrojPasosa,
+		KontaktPut: payload01.KontaktPut,
+		AdresaPut: payload01.AdresaPut,
+		mailPut: payload01.mailPut
+	}
+	})]]></dw:set-payload>
+        </dw:transform-message>
+                <set-property propertyName="http.status" value="200" doc:name="Property"/>
+                <set-payload value="#[payload]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+	<flow name="AvionskaKartaPutByIDFlow">
+		<json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+		<db:update config-ref="MySQL_Configuration" doc:name="Database">
+			<db:dynamic-query><![CDATA[UPDATE db.Let
+set CenaKarte= '#[payload.CenaKarte]',
+DatumKupovine= '#[payload.DatumKupovine]',
+CheckIn= #[payload.CheckIn],
+BrojSedista= '#[payload.BrojSedista]',
+LetID= #[Integer.parseInt(payload.LetID)],
+KlasaID= #[Integer.parseInt(payload.KlasaID)],
+PutnikID= #[Integer.parseInt(payload.PutnikID)]
+where AvionskaKartaID=#[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+		</db:update>
+		<choice doc:name="Choice">
+			<when expression="#[payload != 1]">
+				<set-property propertyName="http.status" value="400" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Cant update avionska karta&quot;}" doc:name="Set Payload"/>
+			</when>
+			<otherwise>
+				<set-property propertyName="http.status" value="200" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Avionska karta updated!&quot;}" doc:name="Set Payload"/>
+			</otherwise>
+		</choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvionskaKartaDeleteByIdFlow">
+		<db:delete config-ref="MySQL_Configuration" doc:name="Database">
+			<db:dynamic-query><![CDATA[Delete from db.AvionskaKarta where AvionskaKartaID= #[message.inboundProperties.'http.uri.params'.id]]]></db:dynamic-query>
+		</db:delete>
+		<choice doc:name="Choice">
+			<when expression="#[payload != 1]">
+				<set-property propertyName="http.status" value="400" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Cant delete the Avionska karta&quot;}" doc:name="Payload"/>
+			</when>
+			<otherwise>
+				<set-property propertyName="http.status" value="200" doc:name="Property"/>
+				<set-payload value="{&quot;message&quot;:&quot;Avionska karta deleted!&quot;}" doc:name="Payload"/>
+			</otherwise>
+		</choice>
+		<catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+            <set-payload value="{message:&quot;Error&quot;}" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+	</flow>
+	<flow name="AvinskaKLogging">
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <file:outbound-endpoint path="../files" outputPattern="avionskaKget.txt" connector-ref="File3" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>

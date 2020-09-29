@@ -1,0 +1,88 @@
+<h1 style="text-align:center">Let</h1>
+    
+    <div class="container mat-elevation-z8">
+      <mat-form-field class="search">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      <mat-table #table [dataSource]="dataSource" class="mat-cell" matSort>
+        <ng-container matColumnDef="LetID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>LetID</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.LetID}}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="DatumPolaska">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>DatumPolaska</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.DatumPolaska | date : "dd.MM.yyyy."}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="VremePolaska">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Datum VremePolaska</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.VremePolaska}}</mat-cell>
+        </ng-container>      
+    
+        <ng-container matColumnDef="Status">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.Status}}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="Terminal">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Terminal</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.Terminal}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="SlobodnoBizKlasa">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>SlBizKl</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.SlobodnoBizKlasa}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="SlobodnoEkoKlasa">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>SlEkoKl</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.SlobodnoEkoKlasa}}</mat-cell>
+        </ng-container> 
+        <ng-container matColumnDef="AvionID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Avion</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.Avion.Marka}}</mat-cell>
+        </ng-container> 
+        <ng-container matColumnDef="KompanijaID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Kompanija</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.AvioKompanija.NazivAK}}</mat-cell>
+        </ng-container> 
+        <ng-container matColumnDef="DestinacijaID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Destinacija</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.Destinacija.Grad}}</mat-cell>
+        </ng-container> 
+        <ng-container matColumnDef="PilotID">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Pilot</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.Pilot.ImeP}}</mat-cell>
+        </ng-container> 
+        <!-- actions -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef="let row; let i=index;">
+            <button mat-icon-button color="primary" (click)="openDialog(1, row.LetID, row.DatumPolaska, row.VremePolaska, row.Status, row.Terminal, row.SlobodnoBizKlasa, row.SlobodnoEkoKlasa, row.AvionID, row.KompanijaID, row.DestinacijaID, row.PilotID)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-header-cell>
+    
+          <mat-cell *matCellDef="let row; let i=index;">
+            <button mat-icon-button color="primary" (click)="openDialog(2, row.LetID, row.DatumPolaska, row.VremePolaska, row.Status, row.Terminal, row.SlobodnoBizKlasa, row.SlobodnoEkoKlasa, row.AvionID, row.KompanijaID, row.DestinacijaID, row.PilotID)">
+              <mat-icon aria-label="Edit">edit</mat-icon>
+            </button>
+    
+            <button mat-icon-button color="primary" (click)="openDialog(3, row.LetID, row.DatumPolaska, row.VremePolaska, row.Status, row.Terminal, row.SlobodnoBizKlasa, row.SlobodnoEkoKlasa, row.AvionID, row.KompanijaID, row.DestinacijaID, row.PilotID)">
+              <mat-icon aria-label="Delete">delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row style="cursor: pointer" *matRowDef="let row; columns: displayedColumns;" ></mat-row>
+      </mat-table>
+    
+      <mat-paginator [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 20]"
+                   [showFirstLastButtons]="true">
+    </mat-paginator>
+    </div>
+ <!--    <div class="container mat-elevation-z8">
+(click)="selectRow(row)" [ngClass]="{'selectRow': selektovanLet != null && selektovanLet.LetID == row.LetID}"
+
+      <app-igrac *ngIf="selektovanLet" [selektovanTim]="selektovanLet"></app-igrac>
+    </div> -->

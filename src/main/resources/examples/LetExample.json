@@ -1,0 +1,13 @@
+{
+		"LetID":1,
+		"DatumPolaska":"2020-05-11",
+		"VremePolaska":"13:15",
+		"Status":true,
+		"Terminal":11,
+		"SlobodnoBizKlasa":200,
+		"SlobodnoEkoKlasa":200,
+		"AvionID":1,
+		"KompanijaID":1,
+		"DestinacijaID":1,
+		"PilotID":1
+}

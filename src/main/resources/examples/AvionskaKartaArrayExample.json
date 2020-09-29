@@ -1,0 +1,22 @@
+[
+	{
+		"AvionskaKartaID":1,
+		"CenaKarte":100,
+		"DatumKupovine":"2020-1-1",
+		"CheckIn":true,
+		"BrojSedista":13,
+		"LetID":1,
+		"KlasaID":1,
+		"PutnikID":1
+},
+{
+		"AvionskaKartaID":2,
+		"CenaKarte":150,
+		"DatumKupovine":"2020-1-1",
+		"CheckIn":true,
+		"BrojSedista":10,
+		"LetID":1,
+		"KlasaID":1,
+		"PutnikID":1
+	}
+]

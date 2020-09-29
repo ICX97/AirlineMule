@@ -1,0 +1,64 @@
+<h1 style="text-align:center">Pilot</h1>
+<div class="container mat-elevation-z8">
+  <mat-form-field class="search">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+  <mat-table #table [dataSource]="dataSource" class="mat-cell" matSort>
+    <ng-container matColumnDef="PilotID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>PilotID</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.PilotID}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ImeP">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>ImeP</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.ImeP}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="PrezimeP">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>PrezimeP</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.PrezimeP}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="JMBGP">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>JMBGP</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.JMBGP}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="KontaktP">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>KontaktP</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.KontaktP}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="AdresaP">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>AdresaP</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.AdresaP}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="mail">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>mail</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.mail}}</mat-cell>
+    </ng-container>
+    <!-- actions -->
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button color="primary" (click)="openDialog(1,0,'','',0,'','','')">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button color="primary" (click)="openDialog(2, row.PilotID, row.ImeP, row.PrezimeP, row.JMBGP, row.KontaktP,row.AdresaP,row.mail)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+
+        <button mat-icon-button color="primary" (click)="openDialog(3, row.PilotID, row.ImeP, row.PrezimeP, row.JMBGP, row.KontaktP,row.AdresaP,row.mail)">
+          <mat-icon aria-label="Delete">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row style="cursor: pointer" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+  </mat-paginator>
+</div>
